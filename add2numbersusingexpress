@@ -1,0 +1,27 @@
+const express=require('express');
+const app=express();
+app.use(express.urlencoded({extended: false}));
+
+app.get('/add',(req,res)=>{
+res.send(`<center><h1>Login</h1>
+    <form method="POST" action="/add">
+<br><label>number 1:</label><input type="text" name="username" placeholder="Username" required /><br>
+<br><label>number 2:</label><input type="text" name="regd" placeholder="Regd.No" required /><br>
+      <button type="submit">Login</button>
+    </form></center>`);
+});
+
+
+app.post('/add',(req,res)=>{
+
+var {username,regd}=req.body;
+var sum=parseInt(username)+parseInt(regd);
+res.send("sum is :"+sum);
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+
+
