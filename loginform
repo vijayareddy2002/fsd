@@ -1,0 +1,92 @@
+const express = require('express');
+const app = express();
+app.use(express.urlencoded({ extended: false }));
+
+var users = ['vijaya', 'abcd', 'abcde', 'abcdef'];
+var pass = ['abc', 'abcd', 'abcde', 'abcde'];
+
+app.get('/login', (req, res) => {
+  res.send(`
+<div><center><h1>Login</h1>
+    <form method="POST" action="/login">
+<br><label>Name:</label><input type="text" name="username" placeholder="Username" required /><br>
+<br><label>Password:</label><input type="password" name="password" placeholder="Password" required /><br>
+<br><label>Regd.No:</label><input type="text" name="regd" placeholder="Regd.No" required /><br>
+      <button type="submit">Login</button>
+    </form></center></div>
+  `);
+});
+
+app.post('/login', (req, res) => {
+    const { username, password,regd } = req.body;
+    var check=0;
+    for(let i=0; i<users.length; i++){
+        if (username === users[i] && password === pass[i]) {
+            check=1;
+            res.send('Login successful '+username+''+regd);
+        }
+    }
+    if(check===0) {
+        res.send('Invalid username or password');
+    }
+});
+
+app.get('/resetpassword', (req, res) => {
+    res.send(`
+  <center><h1>Reset Password</h1>
+      <form method="POST" action="/resetstatus">
+  <br><label>Name:</label><input type="text" name="username" placeholder="Username" required /><br>
+  <br><label>Password:</label><input type="password" name="password" placeholder="Password" required /><br>
+  <br><label>New Password:</label><input type="password" name="newpassword" placeholder="New Password" required /><br>
+        <button type="submit">Submit</button>
+      </form></center>
+    `);
+});
+
+app.post('/resetstatus', (req, res)=>{
+    const { username, password,newpassword } = req.body;
+    var check = 0;
+    var pos = -1;
+    for(let i=0; i<users.length; i++){
+        if(username===users[i] && password===pass[i]){
+            check=1;
+            pos = i;
+            break;
+        }
+    }
+    if(check === 1){
+        if(password===newpassword){
+            res.send('Password is same as before!!');
+        }
+        else{
+            pass[pos]=newpassword;
+            res.send('Password Changed Successfully');
+        }
+    }
+    else{
+        res.send('Wrong Password');
+    }
+});
+
+app.get('/newlogin', (req, res) => {
+    res.send(`
+  <center><h1>New Login</h1>
+      <form method="POST" action="/newlogin">
+  <br><label>Name:</label><input type="text" name="username" placeholder="Username" required /><br>
+  <br><label>Password:</label><input type="password" name="password" placeholder="Password" required /><br>
+  <br><label>Regd.No:</label><input type="text" name="regd" placeholder="Regd.No" required /><br>
+        <button type="submit">Login</button>
+      </form></center>
+    `);
+});
+
+app.post('/newlogin', (req, res)=>{
+    const { username, password,regd } = req.body;
+    users.push(username);
+    pass.push(password);
+    res.send("User "+regd+" Registered successfully");
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
